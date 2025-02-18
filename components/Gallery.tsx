@@ -1,6 +1,10 @@
+"use client";
+
 import Image from "next/image";
+import { useState } from "react";
 
 export const Gallery = () => {
+  const [data, setData] = useState([]);
   const sampleData = [
     {
       _id: 1,
@@ -21,6 +25,22 @@ export const Gallery = () => {
       imageUrl: "/assets/images/nfts/image3.png",
     },
   ];
+
+  const fetchData = async () => {
+    try {
+      const accounts = await window.ethereum.request({
+        method: "eth_requestAccounts",
+      });
+      const userWallet = accounts[0];
+      const response = await fetch(
+        `https://cytric-backend-z54j.onrender.com/nft/gallery/${userWallet}`
+      );
+      const data = await response.json();
+      setData(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <div className="flex flex-col gap-8 px-4">
       <h2 className="text-white font-bold text-xl">Your NFT Gallery</h2>
