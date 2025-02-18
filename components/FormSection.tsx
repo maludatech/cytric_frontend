@@ -7,6 +7,10 @@ import { APP_NAME } from "@/lib/constant";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { createPublicClient, createWalletClient, http } from "viem";
+import { sepolia } from "viem/chains";
+import { useAccount } from "wagmi";
+import contractABI from "@/contracts/contractABI.json";
 
 // Form Values Interface
 interface FormValues {
@@ -15,8 +19,24 @@ interface FormValues {
   imageUrl: string;
 }
 
+const MINTING_CONTRACT_ADDRESS = "0x743f49311a82fe72eb474c44e78da2a6e0ae951c";
+
 export const FormSection = () => {
+  const { address, isConnected } = useAccount();
+
+  const client = createWalletClient({
+    chain: sepolia,
+    transport: http(),
+  });
+
+  const publicClient = createPublicClient({
+    chain: sepolia,
+    transport: http(),
+  });
+
   const { toast } = useToast();
+
+  const [isLoading, setIsLoading] = useState<Boolean>(false);
 
   // Validation Schema using Yup
   const schema = yup.object().shape({
@@ -55,9 +75,42 @@ export const FormSection = () => {
         variant: "destructive",
       });
     }
-  }, [errors.nftName, errors.nftDescription, errors.imageUrl]);
+  }, [errors.nftName, errors.nftDescription, errors.imageUrl, toast]);
 
-  const onSubmit = (data: FormValues) => {};
+  const onSubmit = async (data: FormValues) => {
+    if (!address || !isConnected) {
+      toast({
+        title: "Error",
+        description: "Please connect your wallet first",
+        variant: "destructive",
+      });
+      return;
+    }
+    try {
+      const { request } = await publicClient.simulateContract({
+        address: MINTING_CONTRACT_ADDRESS,
+        abi: contractABI,
+        functionName: "mintNFT",
+        args: [data.nftName, data.nftDescription, data.imageUrl],
+      });
+      const hash = await client.writeContract(request);
+
+      console.log("Transaction Hash:", hash);
+
+      toast({
+        title: "Success",
+        description: "NFT minted successfully!",
+        variant: "default",
+      });
+    } catch (error) {
+      console.error("Error minting NFT:", error);
+      toast({
+        title: "Error",
+        description: "Failed to mint NFT. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
 
   return (
     <div className="w-full flex justify-center px-8 sm:px-0 ">
@@ -65,7 +118,7 @@ export const FormSection = () => {
         className="text-white bg-[#11182780] p-8 border-[#1F2937] border rounded-lg flex flex-col gap-8 w-full max-w-xl"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <h1 className="font-bold text-xl text-start text-=[#FFFFFF]">
+        <h1 className="font-bold text-xl text-start text-white">
           Mint Your NFT
         </h1>
         <div className="text-[#9CA3AF] flex flex-col gap-4">
@@ -95,14 +148,17 @@ export const FormSection = () => {
             />
           </div>
         </div>
-        <button className="flex gap-2 bg-gradient-to-r from-[#EC4899] to-[#8B5CF6] rounded-xl text-[16px] p-4 text-white items-center justify-center font-bold">
+        <button
+          className="flex gap-2 bg-gradient-to-r from-[#EC4899] to-[#8B5CF6] rounded-xl text-[16px] p-4 text-white items-center justify-center font-bold"
+          disabled={isLoading}
+        >
           <Image
             src={"/assets/images/Frame(2).png"}
             alt={`${APP_NAME} icon`}
             width={20}
             height={20}
           />
-          Mint NFT
+          {isLoading ? "Minting" : "Mint NFT"}
         </button>
       </form>
     </div>

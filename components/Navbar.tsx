@@ -1,6 +1,7 @@
 import { Wallet } from "lucide-react";
 import Image from "next/image";
 import { APP_NAME } from "@/lib/constant";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 export const Navbar = () => {
   return (
@@ -13,10 +14,11 @@ export const Navbar = () => {
           height={30}
         />
 
-        <button className="flex gap-2 bg-gradient-to-r from-[#EC4899] to-[#8B5CF6] rounded-full text-sm p-2 text-white items-center">
+        <ConnectButton />
+        {/* <button className="flex gap-2 bg-gradient-to-r from-[#EC4899] to-[#8B5CF6] rounded-full text-sm p-2 text-white items-center">
           <Wallet color="#ffffff" strokeWidth={1.25} size={20} />
           Connect Wallet
-        </button>
+        </button> */}
       </div>
     </nav>
   );
