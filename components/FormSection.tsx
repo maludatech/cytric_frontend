@@ -36,7 +36,7 @@ export const FormSection = () => {
 
   const { toast } = useToast();
 
-  const [isLoading, setIsLoading] = useState<Boolean>(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Validation Schema using Yup
   const schema = yup.object().shape({
@@ -77,6 +77,41 @@ export const FormSection = () => {
     }
   }, [errors.nftName, errors.nftDescription, errors.imageUrl, toast]);
 
+  // Helper function to generate a random numeric ID
+  const generateRandomId = () => {
+    return Math.floor(Math.random() * 1000000); // Random ID between 0 and 999999
+  };
+
+  // Function to check if the NFT ID exists on the blockchain
+  const checkIfIdExists = async (id: number) => {
+    try {
+      const exists = await publicClient.readContract({
+        address: MINTING_CONTRACT_ADDRESS,
+        abi: contractABI,
+        functionName: "checkId", // Replace with your contract's function to check existence
+        args: [id],
+      });
+      return exists;
+    } catch (error) {
+      console.error("Error checking if NFT exists:", error);
+      return false;
+    }
+  };
+
+  // Function to find a unique ID for minting
+  const findUniqueId = async () => {
+    let id = generateRandomId();
+    let exists = await checkIfIdExists(id);
+
+    // Loop to find a unique ID
+    while (exists) {
+      id = generateRandomId();
+      exists = await checkIfIdExists(id);
+    }
+
+    return id;
+  };
+
   const onSubmit = async (data: FormValues) => {
     if (!address || !isConnected) {
       toast({
@@ -87,13 +122,24 @@ export const FormSection = () => {
       return;
     }
     try {
+      const id = await findUniqueId(); // Find unique ID
+      const accounts = await window.ethereum.request({
+        method: "eth_requestAccounts",
+      });
+      const userAccount = accounts[0];
+
       const { request } = await publicClient.simulateContract({
         address: MINTING_CONTRACT_ADDRESS,
         abi: contractABI,
-        functionName: "mintNFT",
-        args: [data.nftName, data.nftDescription, data.imageUrl],
+        functionName: "mint",
+        args: [id, data.nftName, data.nftDescription, data.imageUrl],
+        account: userAccount,
       });
-      const hash = await client.writeContract(request);
+
+      const hash = await client.writeContract({
+        ...request,
+        account: userAccount,
+      });
 
       console.log("Transaction Hash:", hash);
 
