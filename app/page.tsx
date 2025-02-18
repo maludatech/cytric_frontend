@@ -1,6 +1,6 @@
 import { FormSection } from "@/components/FormSection";
 import { HeroSection } from "@/components/HeroSection";
-import { Gallery } from "@/components/ui/Gallery";
+import { Gallery } from "@/components/Gallery";
 
 export default function Home() {
   return (
