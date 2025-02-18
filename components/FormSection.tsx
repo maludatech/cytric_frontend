@@ -37,6 +37,7 @@ export const FormSection = () => {
   const { toast } = useToast();
 
   const [isLoading, setIsLoading] = useState(false);
+  const [isNFTMinted, setIsNFTMInted] = useState(false);
 
   // Validation Schema using Yup
   const schema = yup.object().shape({
@@ -122,6 +123,7 @@ export const FormSection = () => {
       return;
     }
     try {
+      setIsLoading(true);
       const id = await findUniqueId(); // Find unique ID
       const accounts = await window.ethereum.request({
         method: "eth_requestAccounts",
@@ -143,6 +145,21 @@ export const FormSection = () => {
 
       console.log("Transaction Hash:", hash);
 
+      // Store NFT data in the backend
+      await fetch("https://cytric-backend-z54j.onrender.com/nft", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          nftId: id,
+          nftName: data.nftName,
+          nftDescription: data.nftDescription,
+          nftLogo: data.imageUrl,
+          userWalletAddress: userAccount,
+        }),
+      });
+
       toast({
         title: "Success",
         description: "NFT minted successfully!",
@@ -155,6 +172,8 @@ export const FormSection = () => {
         description: "Failed to mint NFT. Please try again.",
         variant: "destructive",
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 

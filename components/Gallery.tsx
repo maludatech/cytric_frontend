@@ -22,7 +22,7 @@ export const Gallery = () => {
     },
   ];
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-8 px-4">
       <h2 className="text-white font-bold text-xl">Your NFT Gallery</h2>
       <div className="flex flex-col gap-6 sm:grid sm:grid-cols-2 lg:grid-cols-3">
         {sampleData.map((data) => (
