@@ -1,11 +1,11 @@
 import { Wallet } from "lucide-react";
 import Image from "next/image";
-import { APP_NAME } from "@/libs/constant";
+import { APP_NAME } from "@/lib/constant";
 
 export const Navbar = () => {
   return (
-    <nav className="bg-[#1F2937] px-8">
-      <div className="flex justify-between items-center body-container  h-16">
+    <nav className="bg-[#000000] px-8 border-b border-[#1F2937]">
+      <div className="flex justify-between items-center body-container h-16">
         <Image
           src={"/assets/images/Frame.png"}
           alt={`${APP_NAME} icon`}
