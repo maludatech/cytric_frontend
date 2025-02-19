@@ -19,13 +19,11 @@ export const HeroSection = ({
         created by artists worldwide.
       </p>
       <div className="flex gap-2">
-        <button className="flex gap-1 bg-gradient-to-r from-[#EC4899] to-[#8B5CF6] rounded-xl text-sm p-4 text-white items-center font-bold hover:opacity-90">
-          <Rocket
-            color="#ffffff"
-            strokeWidth={1.75}
-            size={20}
-            onClick={scrollToForm}
-          />
+        <button
+          className="flex gap-1 bg-gradient-to-r from-[#EC4899] to-[#8B5CF6] rounded-xl text-sm p-4 text-white items-center font-bold hover:opacity-90"
+          onClick={scrollToForm}
+        >
+          <Rocket color="#ffffff" strokeWidth={1.75} size={20} />
           Start Creating
         </button>
         <button className="flex gap-1 bg-[#1F293780] border border-[#374151] rounded-xl text-sm p-4 text-white items-center hover:opacity-90">

@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { APP_NAME } from "@/lib/constant";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { forwardRef, useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Check, Share2 } from "lucide-react";
 import { createPublicClient, createWalletClient, http } from "viem";
@@ -22,11 +22,7 @@ interface FormValues {
 
 const MINTING_CONTRACT_ADDRESS = "0x743f49311a82fe72eb474c44e78da2a6e0ae951c";
 
-export const FormSection = ({
-  ref,
-}: {
-  ref: React.RefObject<HTMLDivElement | null>;
-}) => {
+export const FormSection = forwardRef<HTMLDivElement, {}>((props, ref) => {
   const { address, isConnected } = useAccount();
 
   const client = createWalletClient({
@@ -239,7 +235,7 @@ export const FormSection = ({
     }
   };
   return (
-    <div className="w-full flex justify-center px-8 sm:px-0 ">
+    <div ref={ref} className="w-full flex justify-center px-8 sm:px-0 ">
       {isNFTMinted ? (
         <div className="text-white bg-[#11182780] p-8 border-[#10B981] border rounded-lg flex flex-col gap-8 w-full max-w-xl ">
           <div className="flex flex-col gap-4 items-center justify-center">
@@ -351,4 +347,4 @@ export const FormSection = ({
       )}
     </div>
   );
-};
+});
