@@ -22,7 +22,11 @@ interface FormValues {
 
 const MINTING_CONTRACT_ADDRESS = "0x743f49311a82fe72eb474c44e78da2a6e0ae951c";
 
-export const FormSection = () => {
+export const FormSection = ({
+  ref,
+}: {
+  ref: React.RefObject<HTMLDivElement | null>;
+}) => {
   const { address, isConnected } = useAccount();
 
   const client = createWalletClient({
@@ -39,6 +43,7 @@ export const FormSection = () => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [isNFTMinted, setIsNFTMInted] = useState(true);
+  const [loadingMintedNFT, setIsLoadingMintedNFT] = useState(false);
 
   // Validation Schema using Yup
   const schema = yup.object().shape({
@@ -189,26 +194,33 @@ export const FormSection = () => {
     }
     try {
       setIsLoading(true);
-      const id = await generateRandomId(); // Find unique ID
+      const id = generateRandomId(); // Find unique ID
       const accounts = await window.ethereum.request({
         method: "eth_requestAccounts",
       });
       const userAccount = accounts[0];
 
       // Store NFT data in the backend
-      await fetch("https://cytric-backend-z54j.onrender.com/nft", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          nftId: id,
-          nftName: data.nftName,
-          nftDescription: data.nftDescription,
-          nftLogo: data.imageUrl,
-          userWalletAddress: userAccount,
-        }),
-      });
+      const response = await fetch(
+        "https://cytric-backend-z54j.onrender.com/nft",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            nftId: id,
+            nftName: data.nftName,
+            nftDescription: data.nftDescription,
+            nftLogo: data.imageUrl,
+            userWalletAddress: userAccount,
+          }),
+        }
+      );
+
+      if (response.ok) {
+        setIsNFTMInted(true);
+      }
 
       toast({
         title: "Success",
