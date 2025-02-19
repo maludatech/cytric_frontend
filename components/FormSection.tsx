@@ -7,7 +7,7 @@ import { APP_NAME } from "@/lib/constant";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { Check } from "lucide-react";
+import { Check, Share2 } from "lucide-react";
 import { createPublicClient, createWalletClient, http } from "viem";
 import { sepolia } from "viem/chains";
 import { useAccount } from "wagmi";
@@ -229,7 +229,7 @@ export const FormSection = () => {
   return (
     <div className="w-full flex justify-center px-8 sm:px-0 ">
       {isNFTMinted ? (
-        <div className="text-white bg-[#11182780] p-8 border-[#10B981] border rounded-lg flex flex-col gap-8 w-full max-w-xl items-center justify-center">
+        <div className="text-white bg-[#11182780] p-8 border-[#10B981] border rounded-lg flex flex-col gap-8 w-full max-w-xl ">
           <div className="flex flex-col gap-4 items-center justify-center">
             <div className="bg-[#10B98133] rounded-full p-5">
               <Check color="#10B981" strokeWidth={3} />
@@ -241,7 +241,52 @@ export const FormSection = () => {
               Your NFT has been created and added to your collection
             </p>
           </div>
-          <div className="bg-[#1F293780]"></div>
+          <div className="flex flex-col rounded-lg bg-[#1F293780] p-4 justify-center">
+            <Image
+              src={"/assets/images/nfts/image1.png"}
+              alt={"Cosmic Dreams #001"}
+              width={400}
+              height={400}
+              className="rounded-lg w-full"
+            />
+            <div className="flex flex-col gap-4 p-3">
+              <div className="flex flex-col gap-1">
+                <h2 className="text-[#9CA3AF] text-sm">NFT Name</h2>
+                <h3 className="font-bold text-[16px] text-[#FFFFFF]">
+                  {"Cosmic Dreams #001"}
+                </h3>
+              </div>
+              <div className="flex flex-col gap-1">
+                <h2 className="text-[#9CA3AF] text-sm">NFT Description</h2>
+                <p className="text-[16px] text-[#D1D5DB]">
+                  {"A journey through digital dimensions"}
+                </p>
+              </div>
+              <div className="flex flex-col gap-1">
+                <h2 className="text-[#9CA3AF] text-sm">NFT ID</h2>
+                <p className="text-[16px] text-[#8B5CF6]">{"#8F3E2A1D9C"}</p>
+              </div>
+            </div>
+          </div>
+          <div className="flex flex-col w-full sm:flex-row gap-4">
+            <button className="flex gap-2 bg-[#1F293780] border border-[#374151] rounded-xl text-[16px] p-4 text-white items-center justify-center w-full hover:opacity-90">
+              <Share2 color="#ffffff" strokeWidth={3} size={16} />
+              Share
+            </button>
+            <button
+              className="flex gap-2 bg-gradient-to-r from-[#EC4899] to-[#8B5CF6] rounded-xl text-[16px] p-4 text-white items-center justify-center font-bold w-full hover:opacity-90"
+              disabled={isLoading}
+              onClick={() => setIsNFTMInted(false)}
+            >
+              <Image
+                src={"/assets/images/Frame(2).png"}
+                alt={`${APP_NAME} icon`}
+                width={20}
+                height={20}
+              />
+              Mint Another
+            </button>
+          </div>
         </div>
       ) : (
         <form
