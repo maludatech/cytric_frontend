@@ -8,22 +8,26 @@ export default function ErrorPage({
   reset: () => void;
 }) {
   return (
-    <div className="flex flex-col gap-4 items-center justify-center min-h-screen bg-black">
-      <h1 className="text-[#8B5CF6] text-9xl font-bold">Error</h1>
-      <h2 className="text-white text-lg font-semibold">{error.message}</h2>
-      <button
-        className="text-white bg-[#8B5CF6] p-4 rounded-xl font-semibold hover:opacity-90"
-        onClick={() => reset()}
-      >
-        Try again
-      </button>
-      <button
-        className="text-white bg-[#8B5CF6] p-4 rounded-xl font-semibold hover:opacity-90"
-        onClick={() => (window.location.href = "/")}
-      >
-        Back to home
-      </button>
-      <div className="bg-[#8B5CF6] w-full overflow-hidden h-1/2 pt-8">
+    <div className="flex flex-col gap-4 items-center min-h-screen bg-black relative">
+      <div className="flex flex-col gap-4 h-3/5 items-center justify-center relative z-10 pt-10">
+        <h1 className="text-[#8B5CF6] text-9xl font-bold">Error</h1>
+        <h2 className="text-white text-lg font-semibold">{error.message}</h2>
+        <div className="flex flex-col gap-2 sm:flex-row w-full">
+          <button
+            className="text-white bg-[#8B5CF6] p-4 rounded-xl font-semibold hover:opacity-90 w-full"
+            onClick={() => reset()}
+          >
+            Try again
+          </button>
+          <button
+            className="text-white bg-[#8B5CF6] p-4 rounded-xl font-semibold hover:opacity-90 w-full"
+            onClick={() => (window.location.href = "/")}
+          >
+            Back to home
+          </button>
+        </div>
+      </div>
+      <div className="bg-[#8B5CF6] w-full overflow-hidden h-2/5 mt-8 absolute bottom-0 z-0">
         <svg
           data-name="Layer 1"
           xmlns="http://www.w3.org/2000/svg"

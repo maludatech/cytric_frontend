@@ -3,7 +3,6 @@
 export default function NotFoundPage() {
   return (
     <div className="flex flex-col gap-4 items-center min-h-screen bg-black relative">
-      {/* Ensure content stays above the SVG */}
       <div className="flex flex-col gap-4 h-3/5 items-center justify-center relative z-10 pt-10">
         <h1 className="text-[#8B5CF6] text-9xl font-bold">404</h1>
         <h2 className="text-white text-lg font-semibold">Wrong Destination</h2>
