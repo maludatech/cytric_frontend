@@ -11,7 +11,7 @@ export default function NotFoundPage() {
       >
         Take me home
       </button>
-      <div className="bg-[#8B5CF6] w-full overflow-hidden h-1/2 pt-8">
+      <div className="bg-[#8B5CF6] w-full overflow-hidden h-full mt-8">
         <svg
           data-name="Layer 1"
           xmlns="http://www.w3.org/2000/svg"
