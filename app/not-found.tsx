@@ -2,16 +2,20 @@
 
 export default function NotFoundPage() {
   return (
-    <div className="flex flex-col gap-4 items-center justify-center min-h-screen bg-black">
-      <h1 className="text-[#8B5CF6] text-9xl font-bold">404</h1>
-      <h2 className="text-white text-lg font-semibold">Wrong Destination</h2>
-      <button
-        className="text-white bg-[#8B5CF6] p-4 rounded-xl font-semibold hover:opacity-90"
-        onClick={() => (window.location.href = "/")}
-      >
-        Take me home
-      </button>
-      <div className="bg-[#8B5CF6] w-full overflow-hidden h-full mt-8">
+    <div className="flex flex-col gap-4 items-center min-h-screen bg-black relative">
+      {/* Ensure content stays above the SVG */}
+      <div className="flex flex-col gap-4 h-3/5 items-center justify-center relative z-10 pt-10">
+        <h1 className="text-[#8B5CF6] text-9xl font-bold">404</h1>
+        <h2 className="text-white text-lg font-semibold">Wrong Destination</h2>
+        <button
+          className="text-white bg-[#8B5CF6] p-4 rounded-xl font-semibold hover:opacity-90"
+          onClick={() => (window.location.href = "/")}
+        >
+          Take me home
+        </button>
+      </div>
+      {/* Background wave SVG */}
+      <div className="bg-[#8B5CF6] w-full overflow-hidden h-2/5 mt-8 absolute bottom-0 z-0">
         <svg
           data-name="Layer 1"
           xmlns="http://www.w3.org/2000/svg"
