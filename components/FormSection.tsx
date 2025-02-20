@@ -199,7 +199,7 @@ export const FormSection = forwardRef<HTMLDivElement, {}>((props, ref) => {
 
       // Store NFT data in the backend
       const response = await fetch(
-        "https://cytric-backend-z54j.onrender.com/nft",
+        "https://cytric-backend-z54j.onrender.com/api/nft",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -218,7 +218,7 @@ export const FormSection = forwardRef<HTMLDivElement, {}>((props, ref) => {
 
         // Fetch the newly minted NFT
         const result = await fetch(
-          `https://cytric-backend-z54j.onrender.com/nft/${id}`
+          `https://cytric-backend-z54j.onrender.com/api/nft/${id}`
         );
         const mintedData = await result.json();
 
