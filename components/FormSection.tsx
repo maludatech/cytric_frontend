@@ -12,6 +12,8 @@ import { createPublicClient, createWalletClient, http } from "viem";
 import { sepolia } from "viem/chains";
 import { useAccount } from "wagmi";
 import contractABI from "@/contracts/contractABI.json";
+import { getNFTById, storeNFT } from "@/lib/actions/NFT.action";
+import { INFTInput } from "@/types";
 
 // Form Values Interface
 interface FormValues {
@@ -38,7 +40,7 @@ export const FormSection = forwardRef<HTMLDivElement, {}>((props, ref) => {
   const { toast } = useToast();
 
   const [isLoading, setIsLoading] = useState(false);
-  const [isNFTMinted, setIsNFTMInted] = useState(false);
+  const [isNFTMinted, setIsNFTMinted] = useState(false);
   const [mintedNFT, setMintedNFT] = useState<FormValues | null>(null);
 
   // Validation Schema using Yup
@@ -59,26 +61,19 @@ export const FormSection = forwardRef<HTMLDivElement, {}>((props, ref) => {
 
   // Update errorMessage whenever there is a validation error
   useEffect(() => {
-    if (errors.nftName) {
+    const errorMessage =
+      errors.nftName?.message ||
+      errors.nftDescription?.message ||
+      errors.imageUrl?.message;
+
+    if (errorMessage) {
       toast({
         title: "Error",
-        description: errors.nftName.message,
-        variant: "destructive",
-      });
-    } else if (errors.nftDescription) {
-      toast({
-        title: "Error",
-        description: errors.nftDescription.message,
-        variant: "destructive",
-      });
-    } else if (errors.imageUrl) {
-      toast({
-        title: "Error",
-        description: errors.imageUrl.message,
+        description: errorMessage,
         variant: "destructive",
       });
     }
-  }, [errors.nftName, errors.nftDescription, errors.imageUrl, toast]);
+  }, [errors, toast]);
 
   // Helper function to generate a random numeric ID
   const generateRandomId = () => {
@@ -197,36 +192,29 @@ export const FormSection = forwardRef<HTMLDivElement, {}>((props, ref) => {
       });
       const userAccount = accounts[0];
 
-      // Store NFT data in the backend
-      const response = await fetch(
-        "https://cytric-backend-z54j.onrender.com/api/nft",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            nftId: id,
-            nftName: data.nftName,
-            nftDescription: data.nftDescription,
-            nftLogo: data.imageUrl,
-            userWalletAddress: userAccount,
-          }),
-        }
-      );
+      const userData: INFTInput = {
+        nftId: id,
+        nftName: data.nftName,
+        nftDescription: data.nftDescription,
+        nftLogo: data.imageUrl,
+        userWalletAddress: userAccount,
+      };
 
-      if (response.ok) {
-        setIsNFTMInted(true);
+      // Store NFT data in the backend
+      const res = await storeNFT(userData);
+
+      if (res.success) {
+        setIsNFTMinted(true);
 
         // Fetch the newly minted NFT
-        const result = await fetch(
-          `https://cytric-backend-z54j.onrender.com/api/nft/${id}`
-        );
-        const mintedData = await result.json();
+        const result = await getNFTById(id);
+        const { nft } = result;
 
         // Update the state with the minted NFT details
         setMintedNFT({
-          nftName: mintedData.nftName,
-          nftDescription: mintedData.nftDescription,
-          imageUrl: mintedData.nftLogo,
+          nftName: nft.nftName,
+          nftDescription: nft.nftDescription,
+          imageUrl: nft.nftLogo,
         });
       }
 

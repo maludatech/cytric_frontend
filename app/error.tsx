@@ -10,17 +10,19 @@ export default function ErrorPage({
   return (
     <div className="flex flex-col gap-4 items-center min-h-screen bg-black relative">
       <div className="flex flex-col gap-4 h-3/5 items-center justify-center relative z-10 pt-10">
-        <h1 className="text-[#8B5CF6] text-9xl font-bold">Error</h1>
-        <h2 className="text-white text-lg font-semibold">{error.message}</h2>
-        <div className="flex flex-col gap-2 sm:flex-row w-full">
+        <h1 className="text-[#8B5CF6] text-6xl font-bold">Error</h1>
+        <h2 className="text-white text-[16px] font-semibold">
+          {error.message}
+        </h2>
+        <div className="flex flex-col gap-4 sm:flex-row w-full">
           <button
-            className="text-white bg-[#8B5CF6] p-4 rounded-xl font-semibold hover:opacity-90 w-full"
+            className="text-white bg-[#8B5CF6] p-3 rounded-xl font-semibold hover:opacity-90 w-full"
             onClick={() => reset()}
           >
             Try again
           </button>
           <button
-            className="text-white bg-[#8B5CF6] p-4 rounded-xl font-semibold hover:opacity-90 w-full"
+            className="text-white bg-[#8B5CF6] p-3 rounded-xl font-semibold hover:opacity-90 w-full"
             onClick={() => (window.location.href = "/")}
           >
             Back to home

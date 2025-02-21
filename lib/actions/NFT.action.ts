@@ -3,7 +3,7 @@ import { Iid, INFTInput, IWallet } from "@/types";
 import { idSchema, NFTSchema, walletSchema } from "../validator";
 import { connectToDb } from "@/db/database";
 
-export const storeNFT = async ({ data }: { data: INFTInput }) => {
+export const storeNFT = async (data: INFTInput) => {
   try {
     const nft = await NFTSchema.parseAsync({
       nftName: data.nftName,
@@ -23,7 +23,7 @@ export const storeNFT = async ({ data }: { data: INFTInput }) => {
   }
 };
 
-export const getNFTById = async ({ id }: { id: Iid }) => {
+export const getNFTById = async (id: Iid) => {
   try {
     const NFTId = await idSchema.parseAsync(id);
     await connectToDb();
@@ -40,7 +40,7 @@ export const getNFTById = async ({ id }: { id: Iid }) => {
   }
 };
 
-export const getNFTGallery = async ({ wallet }: { wallet: IWallet }) => {
+export const getNFTGallery = async (wallet: IWallet) => {
   try {
     const walletAddress = await walletSchema.parseAsync(wallet);
     await connectToDb();
