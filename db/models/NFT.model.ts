@@ -24,6 +24,6 @@ const NFTSchema = new Schema({
   },
 });
 
-const NFT = models.NFT || model("NFT", NFTSchema);
+const NFT = models?.NFT || model("NFT", NFTSchema);
 
 export default NFT;
