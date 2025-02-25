@@ -9,7 +9,7 @@ export default function ErrorPage({
 }) {
   return (
     <div className="flex flex-col gap-4 items-center min-h-screen bg-black relative">
-      <div className="flex flex-col gap-4 h-3/5 items-center justify-center relative z-10 pt-10">
+      <div className="flex flex-col gap-4 h-3/5 items-center justify-center text-center relative z-10 pt-10 max-w-lg">
         <h1 className="text-[#8B5CF6] text-6xl font-bold">Error</h1>
         <h2 className="text-white text-[16px] font-semibold">
           {error.message}

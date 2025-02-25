@@ -12,7 +12,7 @@ import { createPublicClient, createWalletClient, http } from "viem";
 import { sepolia } from "viem/chains";
 import { useAccount } from "wagmi";
 import contractABI from "@/contracts/contractABI.json";
-import { getNFTById, storeNFT } from "@/lib/actions/NFT.action";
+import { getNFTById, storeNFT } from "@/lib/actions/NFT.actions";
 import { INFTInput } from "@/types";
 
 // Form Values Interface

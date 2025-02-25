@@ -1,3 +1,5 @@
+"use server";
+
 import NFT from "@/db/models/NFT.model";
 import { Iid, INFTInput, IWallet } from "@/types";
 import { idSchema, NFTSchema, walletSchema } from "../validator";
