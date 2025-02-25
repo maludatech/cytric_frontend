@@ -257,6 +257,7 @@ export const FormSection = forwardRef<HTMLDivElement, {}>((props, ref) => {
               width={400}
               height={400}
               className="rounded-lg w-full"
+              unoptimized={true}
             />
             <div className="flex flex-col gap-4 p-3">
               <div className="flex flex-col gap-1">
@@ -272,6 +273,25 @@ export const FormSection = forwardRef<HTMLDivElement, {}>((props, ref) => {
                 </p>
               </div>
             </div>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-2 w-full">
+            <button className="flex gap-1 bg-[#1F2937] rounded-xl text-[16px] p-4 text-white items-center justify-center font-bold hover:opacity-90 w-full">
+              <Share2 color="#ffffff" strokeWidth={1.75} size={20} />
+              Share
+            </button>
+            <button
+              className="flex gap-2 bg-gradient-to-r from-[#EC4899] to-[#8B5CF6] rounded-xl text-[16px] p-4 text-white items-center justify-center font-bold w-full"
+              disabled={isLoading}
+              onClick={() => setIsNFTMinted(false)}
+            >
+              <Image
+                src={"/assets/images/Frame(2).png"}
+                alt={`${APP_NAME} icon`}
+                width={20}
+                height={20}
+              />
+              Mint another
+            </button>
           </div>
         </div>
       ) : (
