@@ -43,7 +43,7 @@ export const Gallery = () => {
       const res = await getNFTGallery(userWallet);
 
       if (res.success) {
-        setData(res.nfts ?? []);
+        setData(res.data ?? []);
       }
     } catch (error) {
       console.error("Error fetching NFT gallery:", error);
