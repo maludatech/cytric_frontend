@@ -208,13 +208,13 @@ export const FormSection = forwardRef<HTMLDivElement, {}>((props, ref) => {
 
         // Fetch the newly minted NFT
         const result = await getNFTById(id);
-        const { nft } = result;
+        const { data } = result;
 
         // Update the state with the minted NFT details
         setMintedNFT({
-          nftName: nft.nftName,
-          nftDescription: nft.nftDescription,
-          imageUrl: nft.nftLogo,
+          nftName: data.nftName,
+          nftDescription: data.nftDescription,
+          imageUrl: data.nftLogo,
         });
       }
 
