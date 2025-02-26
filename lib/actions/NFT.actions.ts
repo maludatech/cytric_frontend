@@ -35,7 +35,7 @@ export const getNFTById = async (id: Iid) => {
       return { success: false, error: "NFT not found" };
     }
 
-    return { success: true, nft };
+    return { success: true, data: JSON.parse(JSON.stringify(nft)) };
   } catch (error) {
     console.error("Error fetching NFT by ID:", error);
     return { success: false, error: "Internal server error" };
@@ -53,7 +53,7 @@ export const getNFTGallery = async (wallet: IWallet) => {
       return { success: false, error: "No NFTs found for this wallet address" };
     }
 
-    return { success: true, nfts };
+    return { success: true, data: JSON.parse(JSON.stringify(nfts)) };
   } catch (error) {
     console.error("Error fetching NFT gallery:", error);
     return { success: false, error: "Internal server error" };
