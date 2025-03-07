@@ -1,12 +1,15 @@
 "use client";
 
-import { getNFTGallery } from "@/lib/actions/NFT.actions";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { INFTInput } from "@/types";
+import { useAccount } from "wagmi";
+import { useToast } from "@/hooks/use-toast";
 
 export const Gallery = () => {
+  const { address, isConnected } = useAccount();
   const [data, setData] = useState<INFTInput[] | null>(null);
+  const { toast } = useToast();
 
   const sampleData = [
     {
@@ -31,7 +34,7 @@ export const Gallery = () => {
 
   const fetchData = async () => {
     try {
-      if (!window.ethereum) {
+      if (typeof window === "undefined" || !window.ethereum) {
         console.error("Metamask not installed");
         return;
       }
@@ -39,20 +42,43 @@ export const Gallery = () => {
       const accounts = await window.ethereum.request({
         method: "eth_requestAccounts",
       });
-      const userWallet = accounts[0];
-      const res = await getNFTGallery(userWallet);
 
-      if (res.success) {
-        setData(res.data ?? []);
+      const userWallet = accounts[0];
+
+      const response = await fetch(`/api/get-nft-gallery/${userWallet}`);
+
+      if (!response.ok) {
+        throw new Error("Failed to get NFTs");
       }
+
+      const { nft } = await response.json();
+
+      setData(nft ?? []);
     } catch (error) {
       console.error("Error fetching NFT gallery:", error);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to get NFT", // ✅ Fix `value` to `description`
+      });
     }
   };
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    let isMounted = true; // ✅ Prevent state update on unmounted component
+
+    const fetchDataIfConnected = async () => {
+      if (isConnected) {
+        await fetchData();
+      }
+    };
+
+    fetchDataIfConnected();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [address, isConnected]);
 
   return (
     <div className="flex flex-col gap-8 px-4">
@@ -83,7 +109,9 @@ export const Gallery = () => {
       <div className="flex flex-col gap-6 sm:grid sm:grid-cols-2 lg:grid-cols-3">
         {!data || data.length === 0 ? (
           <p className="text-white text-center text-[16px] font-semibold">
-            No NFTs found for this wallet address
+            {isConnected
+              ? "No NFTs found for this wallet address"
+              : "Connect your wallet to start creating your own NFTS"}
           </p>
         ) : (
           data.map((data) => (

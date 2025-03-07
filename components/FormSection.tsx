@@ -12,7 +12,6 @@ import { createPublicClient, createWalletClient, http } from "viem";
 import { sepolia } from "viem/chains";
 import { useAccount } from "wagmi";
 import contractABI from "@/contracts/contractABI.json";
-import { getNFTById, storeNFT } from "@/lib/actions/NFT.actions";
 import { INFTInput } from "@/types";
 
 // Form Values Interface
@@ -175,6 +174,15 @@ export const FormSection = forwardRef<HTMLDivElement, {}>((props, ref) => {
   // };
 
   const onSubmit = async (data: FormValues) => {
+    if (typeof window.ethereum === "undefined") {
+      toast({
+        title: "Error",
+        description: "Please install MetaMask or a similar wallet extension.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     if (!address || !isConnected) {
       toast({
         title: "Error",
@@ -192,6 +200,8 @@ export const FormSection = forwardRef<HTMLDivElement, {}>((props, ref) => {
       });
       const userAccount = accounts[0];
 
+      console.log("user account:", userAccount);
+
       const userData: INFTInput = {
         nftId: id,
         nftName: data.nftName,
@@ -200,34 +210,51 @@ export const FormSection = forwardRef<HTMLDivElement, {}>((props, ref) => {
         userWalletAddress: userAccount,
       };
 
-      // Store NFT data in the backend
-      const res = await storeNFT(userData);
+      console.log("user data:", userData);
 
-      if (res.success) {
+      // Store NFT data in the backend
+      const response = await fetch("/api/store-nft", {
+        method: "POST",
+        body: JSON.stringify(userData),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
         setIsNFTMinted(true);
 
         // Fetch the newly minted NFT
-        const result = await getNFTById(id);
-        const { data } = result;
+        const response = await fetch(`/api/get-nft-by-Id/${id}`);
 
         // Update the state with the minted NFT details
-        setMintedNFT({
-          nftName: data.nftName,
-          nftDescription: data.nftDescription,
-          imageUrl: data.nftLogo,
-        });
-      }
+        if (response.ok) {
+          const data = await response.json();
+          setMintedNFT({
+            nftName: data.nftName,
+            nftDescription: data.nftDescription,
+            imageUrl: data.nftLogo,
+          });
 
-      toast({
-        title: "Success",
-        description: "NFT minted successfully!",
-        variant: "default",
-      });
+          toast({
+            title: "Success",
+            description: "NFT minted successfully!",
+            variant: "default",
+          });
+        } else {
+          throw new Error("Failed to fetch minted NFT details.");
+        }
+      } else {
+        throw new Error("Failed to store NFT.");
+      }
     } catch (error) {
       console.error("Error minting NFT:", error);
       toast({
         title: "Error",
-        description: "Failed to mint NFT. Please try again.",
+        description:
+          error instanceof Error
+            ? error.message
+            : "Failed to mint NFT. Please try again.",
         variant: "destructive",
       });
     } finally {
