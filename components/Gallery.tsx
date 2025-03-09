@@ -54,7 +54,7 @@ export const Gallery = () => {
 
   setInterval(() => {
     isConnected && fetchData();
-  }, 10000);
+  }, 60000);
 
   return (
     <div className="flex flex-col gap-8 px-4">
