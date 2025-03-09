@@ -4,14 +4,22 @@ import { idSchema } from "@/lib/validator";
 
 export const GET = async (
   req: Request,
-  { params }: { params: Promise<{ id: number }> }
+  { params }: { params: Promise<{ id: string }> }
 ) => {
   try {
-    const id = await params;
+    const { id } = await params;
+
+    const numericId = Number(id);
+
     if (!id) {
       throw new Error(`No id provided`);
     }
-    const NFTId = await idSchema.parseAsync(id);
+
+    if (isNaN(numericId)) {
+      throw new Error("Invalid Id format");
+    }
+
+    const NFTId = await idSchema.parseAsync(numericId);
 
     if (!NFTId) {
       throw new Error("Invalid Id");

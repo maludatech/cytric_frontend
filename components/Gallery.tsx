@@ -34,18 +34,7 @@ export const Gallery = () => {
 
   const fetchData = async () => {
     try {
-      if (typeof window === "undefined" || !window.ethereum) {
-        console.error("Metamask not installed");
-        return;
-      }
-
-      const accounts = await window.ethereum.request({
-        method: "eth_requestAccounts",
-      });
-
-      const userWallet = accounts[0];
-
-      const response = await fetch(`/api/get-nft-gallery/${userWallet}`);
+      const response = await fetch(`/api/get-nft-gallery/${address}`);
 
       if (!response.ok) {
         throw new Error("Failed to get NFTs");
@@ -56,29 +45,16 @@ export const Gallery = () => {
       setData(nft ?? []);
     } catch (error) {
       console.error("Error fetching NFT gallery:", error);
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Failed to get NFT", // ✅ Fix `value` to `description`
-      });
     }
   };
 
-  useEffect(() => {
-    let isMounted = true; // ✅ Prevent state update on unmounted component
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
 
-    const fetchDataIfConnected = async () => {
-      if (isConnected) {
-        await fetchData();
-      }
-    };
-
-    fetchDataIfConnected();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [address, isConnected]);
+  setInterval(() => {
+    isConnected && fetchData();
+  }, 10000);
 
   return (
     <div className="flex flex-col gap-8 px-4">

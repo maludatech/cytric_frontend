@@ -8,16 +8,18 @@ export const GET = async (
   { params }: { params: Promise<{ wallet: IWallet }> }
 ) => {
   try {
-    const wallet = await params;
-    const walletAddress = await walletSchema.parseAsync(wallet);
+    const { wallet } = await params;
 
-    if (!walletAddress) {
+    const walletAddress = String(wallet);
+    const userWalletAddress = await walletSchema.parseAsync(walletAddress);
+
+    if (!userWalletAddress) {
       throw new Error(`Invalid wallet address: ${wallet}`);
     }
 
     await connectToDb();
 
-    const nfts = await NFT.find({ userWalletAddress: walletAddress });
+    const nfts = await NFT.find({ userWalletAddress });
 
     if (!nfts) {
       return { success: false, error: "No NFTs found for this wallet address" };
