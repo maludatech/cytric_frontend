@@ -108,7 +108,7 @@ export const Gallery = () => {
       <h2 className="text-white font-bold text-xl">Your NFT Gallery</h2>
       <div className="flex flex-col gap-6 sm:grid sm:grid-cols-2 lg:grid-cols-3">
         {!data || data.length === 0 ? (
-          <p className="text-white text-center text-[16px] font-semibold">
+          <p className="text-white text-center text-sm font-semibold">
             {isConnected
               ? "No NFTs found for this wallet address"
               : "Connect your wallet to start creating your own NFTS"}

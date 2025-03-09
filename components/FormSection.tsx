@@ -174,15 +174,6 @@ export const FormSection = forwardRef<HTMLDivElement, {}>((props, ref) => {
   // };
 
   const onSubmit = async (data: FormValues) => {
-    if (typeof window.ethereum === "undefined") {
-      toast({
-        title: "Error",
-        description: "Please install MetaMask or a similar wallet extension.",
-        variant: "destructive",
-      });
-      return;
-    }
-
     if (!address || !isConnected) {
       toast({
         title: "Error",
@@ -195,19 +186,12 @@ export const FormSection = forwardRef<HTMLDivElement, {}>((props, ref) => {
     try {
       setIsLoading(true);
       const id = generateRandomId(); // Generate a unique ID
-      const accounts = await window.ethereum.request({
-        method: "eth_requestAccounts",
-      });
-      const userAccount = accounts[0];
-
-      console.log("user account:", userAccount);
-
       const userData: INFTInput = {
         nftId: id,
         nftName: data.nftName,
         nftDescription: data.nftDescription,
         nftLogo: data.imageUrl,
-        userWalletAddress: userAccount,
+        userWalletAddress: address,
       };
 
       console.log("user data:", userData);

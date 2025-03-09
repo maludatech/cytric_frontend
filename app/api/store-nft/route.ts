@@ -4,7 +4,7 @@ import { NFTSchema } from "@/lib/validator";
 
 export const POST = async (req: Request, res: Response) => {
   try {
-    const { data } = await req.json();
+    const data = await req.json();
 
     if (!data) {
       return new Response(JSON.stringify({ error: "Data is required" }), {
